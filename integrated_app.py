@@ -32,9 +32,8 @@ ADHESIVE_DENSITY = 0.92
 CORRECT_PASSWORD = "12345"
 
 # ==================== 備註內容 ====================
-DEFAULT_NOTES = """在此處輸入你的備註內容
-可以跨多行
-根據需要修改"""
+DEFAULT_NOTES_KNN = """這次的準確度雖然有7成6，但對類別3，也就是10.63以上的預測完全不準
+，所以只能參考類別1和類別2'"""
 
 
 # ==================== 認證檢查 ====================
@@ -338,7 +337,7 @@ if check_authentication():
 
                     with col_right:
                         st.subheader("📝 備註")
-                        st.text(DEFAULT_NOTES)
+                        st.text(DEFAULT_NOTES_KNN)
 
                     st.divider()
 
