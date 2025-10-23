@@ -210,7 +210,7 @@ if check_authentication():
 
             try:
                 with open(latest_model, 'rb') as f:
-                    model_package = pickle.load(f)
+                    model_package = pickle.load(f, allow_pickle=True)
                 return model_package
             except Exception as e:
                 st.error(f"載入模型包失敗: {str(e)}")
