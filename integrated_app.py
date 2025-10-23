@@ -31,6 +31,11 @@ ADHESIVE_DENSITY = 0.92
 # ==================== 認證密碼 ====================
 CORRECT_PASSWORD = "12345"
 
+# ==================== 備註內容 ====================
+DEFAULT_NOTES = """在此處輸入你的備註內容
+可以跨多行
+根據需要修改"""
+
 
 # ==================== 認證檢查 ====================
 def check_authentication():
@@ -333,7 +338,7 @@ if check_authentication():
 
                     with col_right:
                         st.subheader("📝 備註")
-                        notes = st.text_area("", height=150, placeholder="輸入備註", label_visibility="collapsed")
+                        st.text(DEFAULT_NOTES)
 
                     st.divider()
 
@@ -352,21 +357,20 @@ if check_authentication():
 
                     st.divider()
 
-                    # 預測圖表
-                    if prediction_proba is not None:
-                        st.subheader("📊 預測概率分布")
+                    # 顯示混淆矩陣
+                    confusion_matrix = model_package.get('confusion_matrix', None)
+                    if confusion_matrix is not None:
+                        st.subheader("📊 混淆矩陣 (訓練集)")
 
-                        prob_data = []
-                        for i, prob in enumerate(prediction_proba):
-                            prob_data.append({
-                                "類別": f"類別 {i}",
-                                "概率": prob
-                            })
+                        # 將混淆矩陣轉換為 DataFrame 便於展示
+                        cm_df = pd.DataFrame(
+                            confusion_matrix,
+                            index=[f"實際{i}" for i in range(len(confusion_matrix))],
+                            columns=[f"預測{i}" for i in range(len(confusion_matrix[0]))]
+                        )
 
-                        prob_df = pd.DataFrame(prob_data)
-
-                        # 使用 st.bar_chart 顯示概率分布
-                        st.bar_chart(prob_df.set_index("類別"))
+                        # 使用 heatmap 風格顯示
+                        st.write(cm_df)
 
             st.markdown("---")
             col1, col2, col3 = st.columns(3)
