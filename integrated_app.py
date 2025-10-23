@@ -39,7 +39,7 @@ def check_authentication():
         st.session_state.authenticated = False
 
     if not st.session_state.authenticated:
-        st.set_page_config(page_title='工程計算工具集 - 登入', initial_sidebar_state="collapsed")
+
 
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
