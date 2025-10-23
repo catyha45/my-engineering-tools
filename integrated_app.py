@@ -321,8 +321,8 @@ if check_authentication():
                             class_data = class_info[prediction]
                             st.success(
                                 f"### 類別 {prediction}\n\n"
-                                f"**y 值範圍:** [{class_data['min']:.2f}, {class_data['max']:.2f}]\n\n"
-                                f"**平均值:** {class_data['mean']:.2f}"
+                                f"**y(離型力) 值範圍:** [{class_data['min']:.2f}, {class_data['max']:.2f}]\n\n"
+
                             )
 
                         st.divider()
