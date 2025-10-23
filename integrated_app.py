@@ -94,7 +94,9 @@ if check_authentication():
             st.rerun()
 
         st.divider()
+        st.markdown("---")
         st.caption("工程計算工具集 v1.0")
+        st.caption("Author: Terry | 📍技術中心 - 設備技術部")
 
     # ==================== 應用1：捲材計算器 ====================
     if tool_selection == '捲材計算器':
