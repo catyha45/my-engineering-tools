@@ -32,7 +32,8 @@ ADHESIVE_DENSITY = 0.92
 CORRECT_PASSWORD = "12345"
 
 # ==================== 備註內容 ====================
-DEFAULT_NOTES_KNN = """類別3完全無參考價值，這次的模型只對類別1跟2準確率有7成'"""
+DEFAULT_NOTES_KNN = """類別3完全無參考價值
+，這次的模型只對類別1跟2準確率有7成"""
 
 
 # ==================== 認證檢查 ====================
@@ -78,7 +79,7 @@ if check_authentication():
 
         tool_selection = st.radio(
             "選擇工具",
-            options=['捲材計算器', 'KNN 分類預測器'],
+            options=['捲材計算器', '離型力預測器(test)'],
             label_visibility="collapsed"
         )
 
@@ -190,8 +191,8 @@ if check_authentication():
                       delta=f'{(total_weight - core_weight) / 1000:.3f} kg (不含{core_type})')
 
 
-    # ==================== 應用2：KNN 分類預測器 ====================
-    elif tool_selection == 'KNN 分類預測器':
+    # ==================== 應用2：離型力預測器(test) ====================
+    elif tool_selection == '離型力預測器(test)':
 
         @st.cache_resource
         def load_model_package():
@@ -241,7 +242,7 @@ if check_authentication():
 
 
         # ==================== 標題 ====================
-        st.title("🔮 KNN 分類模型預測器")
+        st.title("🔮 離型力預測器(test)")
         st.markdown("---")
 
         # 載入模型包
