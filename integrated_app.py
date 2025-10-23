@@ -40,7 +40,6 @@ def check_authentication():
 
     if not st.session_state.authenticated:
 
-
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             st.title("🔐 工程計算工具集")
@@ -299,35 +298,19 @@ if check_authentication():
                 if X_input is not None:
                     prediction = model.predict(X_input)[0]
 
+                    prediction_proba = None
+                    try:
+                        proba = model.predict_proba(X_input)[0]
+                        prediction_proba = proba
+                    except:
+                        pass
+
                     st.markdown("---")
                     st.header("📈 預測結果")
 
                     col_left, col_right = st.columns([2, 1])
 
                     with col_left:
-                        # 模型信息
-                        st.subheader("📊 模型信息")
-                        info_col1, info_col2 = st.columns(2)
-                        with info_col1:
-                            st.metric("分類數", n_classes)
-                        with info_col2:
-                            st.metric("LOOCV 準確度", f"{metadata.get('loocv_accuracy', 0):.4f}")
-
-                        st.divider()
-
-                        # 類別定義
-                        st.subheader("📈 類別定義")
-                        for class_id in sorted(class_info.keys()):
-                            info = class_info[class_id]
-                            st.info(
-                                f"**類別 {class_id}**\n"
-                                f"• y 值範圍: [{info['min']:.2f}, {info['max']:.2f}]\n"
-                                f"• 平均值: {info['mean']:.2f}\n"
-                                f"• 訓練樣本: {info['count']} 個"
-                            )
-
-                        st.divider()
-
                         # 預測結果
                         st.subheader("⭐ 預測分類")
                         if prediction in class_info:
@@ -338,9 +321,52 @@ if check_authentication():
                                 f"**平均值:** {class_data['mean']:.2f}"
                             )
 
+                        st.divider()
+
+                        # 模型信息
+                        st.subheader("📊 模型信息")
+                        info_col1, info_col2 = st.columns(2)
+                        with info_col1:
+                            st.metric("分類數", n_classes)
+                        with info_col2:
+                            st.metric("LOOCV 準確度", f"{metadata.get('loocv_accuracy', 0):.4f}")
+
                     with col_right:
                         st.subheader("📝 備註")
-                        notes = st.text_area("", height=300, placeholder="輸入備註", label_visibility="collapsed")
+                        notes = st.text_area("", height=150, placeholder="輸入備註", label_visibility="collapsed")
+
+                    st.divider()
+
+                    # 類別定義
+                    st.subheader("📈 類別定義")
+                    class_cols = st.columns(n_classes)
+                    for class_id in sorted(class_info.keys()):
+                        info = class_info[class_id]
+                        with class_cols[class_id]:
+                            st.info(
+                                f"**類別 {class_id}**\n"
+                                f"• 範圍: [{info['min']:.2f}, {info['max']:.2f}]\n"
+                                f"• 平均: {info['mean']:.2f}\n"
+                                f"• 樣本: {info['count']}"
+                            )
+
+                    st.divider()
+
+                    # 預測圖表
+                    if prediction_proba is not None:
+                        st.subheader("📊 預測概率分布")
+
+                        prob_data = []
+                        for i, prob in enumerate(prediction_proba):
+                            prob_data.append({
+                                "類別": f"類別 {i}",
+                                "概率": prob
+                            })
+
+                        prob_df = pd.DataFrame(prob_data)
+
+                        # 使用 st.bar_chart 顯示概率分布
+                        st.bar_chart(prob_df.set_index("類別"))
 
             st.markdown("---")
             col1, col2, col3 = st.columns(3)
