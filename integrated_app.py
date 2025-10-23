@@ -357,21 +357,6 @@ if check_authentication():
 
                     st.divider()
 
-                    # 顯示混淆矩陣
-                    confusion_matrix = model_package.get('confusion_matrix', None)
-                    if confusion_matrix is not None:
-                        st.subheader("📊 混淆矩陣 (訓練集)")
-
-                        # 將混淆矩陣轉換為 DataFrame 便於展示
-                        cm_df = pd.DataFrame(
-                            confusion_matrix,
-                            index=[f"實際{i}" for i in range(len(confusion_matrix))],
-                            columns=[f"預測{i}" for i in range(len(confusion_matrix[0]))]
-                        )
-
-                        # 使用 heatmap 風格顯示
-                        st.write(cm_df)
-
             st.markdown("---")
             col1, col2, col3 = st.columns(3)
             with col1:
