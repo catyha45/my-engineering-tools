@@ -1,6 +1,4 @@
-# 工程計算工具集
-
-密碼：2456
-
-運行方式：
-streamlit run integrated_app.py
+streamlit==1.28.1
+numpy==1.24.3
+pandas==2.0.3
+scikit-learn==1.3.0
