@@ -244,7 +244,7 @@ if check_authentication():
 
 
         # ==================== 標題 ====================
-        st.title("🔮 離型力預測器(test)")
+        st.title("🔮 貼合議題_離型力預測(test)")
         st.markdown("---")
 
         # 載入模型包
