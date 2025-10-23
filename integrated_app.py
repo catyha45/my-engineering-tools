@@ -256,29 +256,6 @@ if check_authentication():
             original_features = model_package.get('original_features', ['x1', 'x2', 'x3'])
             metadata = model_package.get('metadata', {})
 
-            # ==================== 側邊欄：模型信息 ====================
-            with st.sidebar:
-                st.divider()
-                st.header("📊 模型信息")
-
-                col1, col2 = st.columns(2)
-                with col1:
-                    st.metric("分類數", n_classes)
-                with col2:
-                    st.metric("LOOCV 準確度", f"{metadata.get('loocv_accuracy', 0):.4f}")
-
-                st.divider()
-                st.subheader("📈 類別定義")
-
-                for class_id in sorted(class_info.keys()):
-                    info = class_info[class_id]
-                    st.info(
-                        f"**類別 {class_id}**\n"
-                        f"• y 值範圍: [{info['min']:.2f}, {info['max']:.2f}]\n"
-                        f"• 平均值: {info['mean']:.2f}\n"
-                        f"• 訓練樣本: {info['count']} 個"
-                    )
-
             # ==================== 主要內容區 ====================
             st.header("🎯 特徵選擇")
 
@@ -322,78 +299,48 @@ if check_authentication():
                 if X_input is not None:
                     prediction = model.predict(X_input)[0]
 
-                    prediction_proba = None
-                    try:
-                        proba = model.predict_proba(X_input)[0]
-                        prediction_proba = proba
-                    except:
-                        pass
-
                     st.markdown("---")
                     st.header("📈 預測結果")
 
-                    col1, col2, col3 = st.columns([1, 2, 1])
+                    col_left, col_right = st.columns([2, 1])
 
-                    with col2:
+                    with col_left:
+                        # 模型信息
+                        st.subheader("📊 模型信息")
+                        info_col1, info_col2 = st.columns(2)
+                        with info_col1:
+                            st.metric("分類數", n_classes)
+                        with info_col2:
+                            st.metric("LOOCV 準確度", f"{metadata.get('loocv_accuracy', 0):.4f}")
+
+                        st.divider()
+
+                        # 類別定義
+                        st.subheader("📈 類別定義")
+                        for class_id in sorted(class_info.keys()):
+                            info = class_info[class_id]
+                            st.info(
+                                f"**類別 {class_id}**\n"
+                                f"• y 值範圍: [{info['min']:.2f}, {info['max']:.2f}]\n"
+                                f"• 平均值: {info['mean']:.2f}\n"
+                                f"• 訓練樣本: {info['count']} 個"
+                            )
+
+                        st.divider()
+
+                        # 預測結果
+                        st.subheader("⭐ 預測分類")
                         if prediction in class_info:
                             class_data = class_info[prediction]
                             st.success(
-                                f"### ⭐ 預測分類: 類別 {prediction}\n\n"
+                                f"### 類別 {prediction}\n\n"
                                 f"**y 值範圍:** [{class_data['min']:.2f}, {class_data['max']:.2f}]\n\n"
                                 f"**平均值:** {class_data['mean']:.2f}"
                             )
 
-                    st.subheader("📝 您的選擇")
-                    col1, col2, col3 = st.columns(len(original_features))
-                    for idx, feature in enumerate(original_features):
-                        with [col1, col2, col3][idx]:
-                            st.write(f"**{feature}:** {input_values[feature]}")
-
-                    if prediction_proba is not None:
-                        st.subheader("📊 各分類預測概率")
-
-                        prob_data = []
-                        for i, prob in enumerate(prediction_proba):
-                            marker = "✓" if i == prediction else ""
-                            prob_data.append({
-                                "選中": marker,
-                                "類別": f"類別 {i}",
-                                "概率": f"{prob:.4f}",
-                                "百分比": f"{prob * 100:.2f}%"
-                            })
-
-                        prob_df = pd.DataFrame(prob_data)
-                        st.dataframe(prob_df, use_container_width=True, hide_index=True)
-
-                        max_prob = np.max(prediction_proba)
-                        st.subheader("🎯 信心度評估")
-
-                        if max_prob >= 0.85:
-                            confidence_level = "⭐⭐⭐⭐⭐ 非常高信心 (≥85%)"
-                            color = "green"
-                        elif max_prob >= 0.75:
-                            confidence_level = "⭐⭐⭐⭐ 高信心 (75-85%)"
-                            color = "green"
-                        elif max_prob >= 0.60:
-                            confidence_level = "⭐⭐⭐ 中等信心 (60-75%)"
-                            color = "blue"
-                        elif max_prob >= 0.50:
-                            confidence_level = "⭐⭐ 低信心 (50-60%)"
-                            color = "orange"
-                        else:
-                            confidence_level = "⭐ 非常低信心 (<50%)"
-                            color = "red"
-
-                        col1, col2 = st.columns(2)
-                        with col1:
-                            st.markdown(f"<h3 style='color:{color}'>{confidence_level}</h3>", unsafe_allow_html=True)
-                        with col2:
-                            st.metric("最高概率", f"{max_prob:.4f}")
-
-                        st.subheader("📈 概率分佈")
-                        for i, prob in enumerate(prediction_proba):
-                            marker = "✓" if i == prediction else ""
-                            st.progress(prob, text=f"{marker} 類別 {i}: {prob * 100:.1f}%")
+                    with col_right:
+                        st.subheader("📝 備註")
+                        notes = st.text_area("", height=300, placeholder="輸入備註", label_visibility="collapsed")
 
             st.markdown("---")
             col1, col2, col3 = st.columns(3)
