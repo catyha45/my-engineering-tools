@@ -32,8 +32,8 @@ ADHESIVE_DENSITY = 0.92
 CORRECT_PASSWORD = "12345"
 
 # ==================== 備註內容 ====================
-DEFAULT_NOTES_KNN = """類別3完全無參考價值
-，這次的模型只對類別1跟2準確率有7成"""
+DEFAULT_NOTES_KNN = """類別3完全無參考價值(因為樣本少)
+這次的模型只對類別1跟2準確率有7成"""
 
 
 # ==================== 認證檢查 ====================
@@ -328,7 +328,7 @@ if check_authentication():
                         st.divider()
 
                         # 模型信息
-                        st.subheader("📊 模型信息")
+                        st.subheader("📊 模型資訊")
                         info_col1, info_col2 = st.columns(2)
                         with info_col1:
                             st.metric("分類數", n_classes)
