@@ -9,25 +9,24 @@ DEFAULT_NOTES_KNN = """類別3完全無參考價值(因為樣本少)
 
 
 @st.cache_resource
+@st.cache_resource
 def load_model():
-    """載入模型包"""
-    model_dir = Path(__file__).parent / "model"
+    """載入模型包 - 支持多種環境"""
+    # 嘗試多個可能的路徑
+    possible_paths = [
+        Path(__file__).parent / "model",  # 本地：modules/model
+        Path(__file__).parent.parent / "model",  # 本地：work_project/model
+        Path("./model"),  # 相對路徑
+    ]
 
-    if not model_dir.exists():
-        st.error(f"模型目錄不存在: {model_dir}")
-        return None
+    model_dir = None
+    for path in possible_paths:
+        if path.exists():
+            model_dir = path
+            break
 
-    pkl_files = list(model_dir.glob("*model_package*.pkl"))
-    if not pkl_files:
-        st.error(f"模型目錄中沒有 model_package pkl 檔案")
-        return None
-
-    latest_model = max(pkl_files, key=os.path.getmtime)
-    try:
-        with open(latest_model, 'rb') as f:
-            return pickle.load(f)
-    except Exception as e:
-        st.error(f"載入模型包失敗: {str(e)}")
+    if model_dir is None:
+        st.error("❌ 找不到模型目錄")
         return None
 
 
