@@ -132,8 +132,6 @@ def render_release_force_tab():
     original_features = model_package.get('original_features', ['x1', 'x2', 'x3'])
     metadata = model_package.get('metadata', {})
 
-    st.info("📋 請輸入塗貼工藝參數進行離型力預測")
-
     st.subheader("🎯 特徵選擇")
 
     input_values = {}
@@ -175,153 +173,43 @@ def render_release_force_tab():
             show_prediction_result(model_package, prediction, class_info, metadata, "離型力")
 
 
-def render_roughness_tab():
-    """粗糙度預測標籤頁"""
-    st.header("粗糙度預測")
-
-    model_package = get_model_by_pattern("roughness")
-
-    if model_package is None:
-        st.warning("⚠️ 粗糙度預測模型暫未上線，請等待更新")
-        st.info("""
-        **粗糙度預測模型即將推出**
-
-        功能包括：
-        - 表面粗糙度評估
-        - 工藝參數影響分析
-        - 質量預警
-        """)
-        return
-
-    model = model_package.get('model')
-    class_info = model_package.get('class_info', {})
-    feature_encoding = model_package.get('feature_encoding', {})
-    original_features = model_package.get('original_features', ['x1', 'x2', 'x3'])
-    metadata = model_package.get('metadata', {})
-
-    st.info("📋 請輸入塗貼工藝參數進行粗糙度預測")
-
-    st.subheader("🎯 特徵選擇")
-
-    input_values = {}
-    cols = st.columns(len(original_features))
-
-    for idx, feature in enumerate(original_features):
-        with cols[idx]:
-            if feature in feature_encoding:
-                unique_values = feature_encoding[feature].get('unique_values', [])
-                st.subheader(feature)
-                selected_value = st.selectbox(
-                    f"選擇 {feature} 的值",
-                    options=unique_values,
-                    label_visibility="collapsed",
-                    key=f"roughness_{feature}"
-                )
-                input_values[feature] = selected_value
-
-    st.markdown("---")
-    col1, col2 = st.columns([1, 1])
-
-    with col1:
-        predict_btn = st.button("🔮 預測", use_container_width=True, type="primary", key="roughness_predict")
-
-    with col2:
-        clear_btn = st.button("🗑️ 清除", use_container_width=True, key="roughness_clear")
-
-    if clear_btn:
-        for key in list(st.session_state.keys()):
-            if key.startswith("roughness"):
-                del st.session_state[key]
-        st.rerun()
-
-    if predict_btn:
-        X_input = encode_input(model_package, input_values)
-
-        if X_input is not None:
-            prediction = model.predict(X_input)[0]
-            show_prediction_result(model_package, prediction, class_info, metadata, "粗糙度")
-
-
-def render_adhesion_tab():
-    """粘合強度預測標籤頁"""
-    st.header("粘合強度預測")
-
-    model_package = get_model_by_pattern("adhesion")
-
-    if model_package is None:
-        st.warning("⚠️ 粘合強度預測模型暫未上線，請等待更新")
-        st.info("""
-        **粘合強度預測模型即將推出**
-
-        功能包括：
-        - 粘合強度評估
-        - 工藝參數優化
-        - 缺陷預警
-        """)
-        return
-
-    model = model_package.get('model')
-    class_info = model_package.get('class_info', {})
-    feature_encoding = model_package.get('feature_encoding', {})
-    original_features = model_package.get('original_features', ['x1', 'x2', 'x3'])
-    metadata = model_package.get('metadata', {})
-
-    st.info("📋 請輸入塗貼工藝參數進行粘合強度預測")
-
-    st.subheader("🎯 特徵選擇")
-
-    input_values = {}
-    cols = st.columns(len(original_features))
-
-    for idx, feature in enumerate(original_features):
-        with cols[idx]:
-            if feature in feature_encoding:
-                unique_values = feature_encoding[feature].get('unique_values', [])
-                st.subheader(feature)
-                selected_value = st.selectbox(
-                    f"選擇 {feature} 的值",
-                    options=unique_values,
-                    label_visibility="collapsed",
-                    key=f"adhesion_{feature}"
-                )
-                input_values[feature] = selected_value
-
-    st.markdown("---")
-    col1, col2 = st.columns([1, 1])
-
-    with col1:
-        predict_btn = st.button("🔮 預測", use_container_width=True, type="primary", key="adhesion_predict")
-
-    with col2:
-        clear_btn = st.button("🗑️ 清除", use_container_width=True, key="adhesion_clear")
-
-    if clear_btn:
-        for key in list(st.session_state.keys()):
-            if key.startswith("adhesion"):
-                del st.session_state[key]
-        st.rerun()
-
-    if predict_btn:
-        X_input = encode_input(model_package, input_values)
-
-        if X_input is not None:
-            prediction = model.predict(X_input)[0]
-            show_prediction_result(model_package, prediction, class_info, metadata, "粘合強度")
-
-
 def render():
     """渲染塗貼AI預測工具主頁面"""
     st.title("🔮 塗貼AI預測工具")
     st.markdown("---")
 
-    # 創建標籤頁
-    tab1, tab2, tab3 = st.tabs(["🎯 離型力預測", "📊 粗糙度預測", "💪 粘合強度預測"])
+    # 初始化 session_state
+    if 'prediction_tab' not in st.session_state:
+        st.session_state.prediction_tab = 0
 
-    with tab1:
+    # 2行2列按鈕網格
+    row1_col1, row1_col2 = st.columns(2)
+
+    # 第一行
+    with row1_col1:
+        if st.button("🎯 離型力預測", use_container_width=True,
+                     type="primary" if st.session_state.prediction_tab == 0 else "secondary",
+                     key="btn_release_force"):
+            st.session_state.prediction_tab = 0
+            st.rerun()
+
+    with row1_col2:
+        st.button("📊 粗糙度預測", use_container_width=True,
+                  type="secondary", disabled=True, key="btn_roughness")
+
+    # 第二行（預留給未來功能）
+    row2_col1, row2_col2 = st.columns(2)
+
+    with row2_col1:
+        st.button("🔧 待開發功能1", use_container_width=True,
+                  type="secondary", disabled=True, key="btn_future1")
+
+    with row2_col2:
+        st.button("🔧 待開發功能2", use_container_width=True,
+                  type="secondary", disabled=True, key="btn_future2")
+
+    st.divider()
+
+    # 只顯示離型力預測
+    if st.session_state.prediction_tab == 0:
         render_release_force_tab()
-
-    with tab2:
-        render_roughness_tab()
-
-    with tab3:
-        render_adhesion_tab()
