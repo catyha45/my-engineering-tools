@@ -9,14 +9,13 @@ DEFAULT_NOTES_KNN = """類別3完全無參考價值(因為樣本少)
 
 
 @st.cache_resource
-@st.cache_resource
 def load_model():
     """載入模型包 - 支持多種環境"""
     # 嘗試多個可能的路徑
     possible_paths = [
-        Path(__file__).parent / "model",  # 本地：modules/model
-        Path(__file__).parent.parent / "model",  # 本地：work_project/model
-        Path("./model"),  # 相對路徑
+        Path(__file__).parent.parent / "model",      # work_project/model
+        Path(__file__).parent / "model",             # modules/model
+        Path("./model"),                             # 相對路徑
     ]
 
     model_dir = None
@@ -27,6 +26,19 @@ def load_model():
 
     if model_dir is None:
         st.error("❌ 找不到模型目錄")
+        return None
+
+    pkl_files = list(model_dir.glob("*model_package*.pkl"))
+    if not pkl_files:
+        st.error(f"模型目錄中沒有 model_package pkl 檔案")
+        return None
+
+    latest_model = max(pkl_files, key=os.path.getmtime)
+    try:
+        with open(latest_model, 'rb') as f:
+            return pickle.load(f)
+    except Exception as e:
+        st.error(f"載入模型包失敗: {str(e)}")
         return None
 
 
@@ -147,11 +159,11 @@ def render():
 
             st.divider()
 
-        st.markdown("---")
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.caption("🔧 技術: KNN 分類")
-        with col2:
-            st.caption(f"📅 訓練日期: {metadata.get('training_date', 'N/A')}")
-        with col3:
-            st.caption(f"📊 訓練樣本: {metadata.get('n_training_samples', 'N/A')}")
+            st.markdown("---")
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.caption("🔧 技術: KNN 分類")
+            with col2:
+                st.caption(f"📅 訓練日期: {metadata.get('training_date', 'N/A')}")
+            with col3:
+                st.caption(f"📊 訓練樣本: {metadata.get('n_training_samples', 'N/A')}")
