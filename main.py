@@ -20,8 +20,8 @@ def check_authentication():
     if not st.session_state.authenticated:
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            st.title("🔐 台虹科技 - 技術中心AI預測工具集")
-            st.subheader("請輸入密碼登入")
+            st.title("台虹科技 - 技術中心AI預測工具集")
+            st.subheader("🔐請輸入密碼登入")
             password_input = st.text_input("密碼", type="password")
 
             col_a, col_b = st.columns(2)
