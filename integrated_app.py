@@ -29,7 +29,7 @@ CORE_TYPES = {
 ADHESIVE_DENSITY = 0.92
 
 # ==================== 認證密碼 ====================
-CORRECT_PASSWORD = "12345"
+CORRECT_PASSWORD = "123"
 
 # ==================== 備註內容 ====================
 DEFAULT_NOTES_KNN = """類別3完全無參考價值(因為樣本少)
