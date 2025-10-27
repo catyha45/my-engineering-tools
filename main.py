@@ -1,7 +1,9 @@
 import streamlit as st
+import warnings
+warnings.filterwarnings("ignore", message="missing ScriptRunContext")
+
 from pathlib import Path
 import sys
-
 # ==================== 配置 ====================
 st.set_page_config(
     page_title='工程計算工具集',
@@ -16,8 +18,7 @@ CORRECT_PASSWORD = "t12345"
 # 在這裡添加新工具，格式：'顯示名稱': '模塊路徑'
 TOOLS = {
     '📊 捲材計算器': 'modules.roll_calculator',
-    '🔮 塗貼AI預測工具': 'modules.bonding_predictor',
-    '🎨 塗環AI預測工具': 'modules.coating_predictor'
+
 }
 
 
