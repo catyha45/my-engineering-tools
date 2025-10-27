@@ -10,7 +10,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-CORRECT_PASSWORD = "12345"
+CORRECT_PASSWORD = "taif123"
 
 # ==================== 工具映射 ====================
 # 在這裡添加新工具，格式：'顯示名稱': '模塊路徑'
