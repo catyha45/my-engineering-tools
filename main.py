@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-CORRECT_PASSWORD = "t12345"
+CORRECT_PASSWORD = "12345"
 
 # ==================== 工具映射 ====================
 # 在這裡添加新工具，格式：'顯示名稱': '模塊路徑'
@@ -31,7 +31,7 @@ def check_authentication():
     if not st.session_state.authenticated:
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            st.title("技術中心 - AI預測模型")
+            st.title("捲材計算器")
             st.subheader("🔐 請輸入密碼登入")
             password_input = st.text_input("密碼", type="password", placeholder="輸入密碼")
 
