@@ -93,7 +93,6 @@ if check_authentication():
 
 
         st.subheader("📍技術中心開發")
-        st.caption("技術設備部")
         st.caption("開發者: Terry")
 
 
