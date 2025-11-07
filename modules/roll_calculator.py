@@ -21,22 +21,20 @@ def render():
         inner_diameter = st.number_input('管材內徑 (mm)', value=164.0, step=1.0)
 
     st.subheader('材料密度設定 (g/cm³)')
-    st.info('預設密度 - 鋁: 2.70, 銅: 8.96, PI: 1.42')
-    density_col1, density_col2, density_col3, density_col4 = st.columns(4)
+    st.info('密度參考 - 鋁: 2.70, 銅: 8.96, PI: 1.42, EPOXY: 1.25, PET: 1.37')
+    density_col1, density_col2, density_col3 = st.columns(3)
     with density_col1:
-        density_aluminum = st.number_input('鋁密度', value=2.70, step=0.01, format='%.2f')
+        density_aluminum = st.number_input('材料密度(一)', value=2.70, step=0.01, format='%.2f')
     with density_col2:
-        density_copper = st.number_input('銅密度', value=8.96, step=0.01, format='%.2f')
+        density_copper = st.number_input('材料密度(二)', value=8.96, step=0.01, format='%.2f')
     with density_col3:
-        density_pi = st.number_input('PI密度', value=1.42, step=0.01, format='%.2f')
-    with density_col4:
-        density_none = st.number_input('無密度', value=0.0, step=0.01, format='%.2f')
+        density_pi = st.number_input('材料密度(三)', value=1.42, step=0.01, format='%.2f')
 
     material_density_custom = {
-        '鋁 (Aluminum)': density_aluminum,
-        '銅 (Copper)': density_copper,
-        'PI (Polyimide)': density_pi,
-        '無': density_none
+        '材料密度(一)': density_aluminum,
+        '材料密度(二)': density_copper,
+        '材料密度(三)': density_pi,
+        '無': 0.0
     }
 
     st.subheader('第一層材料')
