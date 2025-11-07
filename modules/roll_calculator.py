@@ -21,7 +21,7 @@ def render():
         inner_diameter = st.number_input('管材內徑 (mm)', value=164.0, step=1.0)
 
     st.subheader('材料密度設定 (g/cm³)')
-    st.info('密度參考 - 鋁: 2.70, 銅: 8.96, PI: 1.42, EPOXY: 1.25, PET: 1.37')
+    st.info('密度參考 - 鋁: 2.70/ 銅: 8.96/ PI: 1.42/ EPOXY: 1.25/ PET: 1.37')
     density_col1, density_col2, density_col3 = st.columns(3)
     with density_col1:
         density_aluminum = st.number_input('材料密度(一)', value=2.70, step=0.01, format='%.2f')
