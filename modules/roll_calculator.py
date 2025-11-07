@@ -101,7 +101,7 @@ def render():
         st.divider()
         st.subheader('計算結果')
 
-        st.metric('單層總厚度', f'{total_thickness:.4f} mm')
+        st.metric('一單位總厚度(膠+第一層+第二層+第三層)', f'{total_thickness:.4f} mm')
         st.metric('收卷外徑', f'{outer_diameter:.2f} mm ({outer_diameter / 10:.2f} cm)')
 
         st.divider()
