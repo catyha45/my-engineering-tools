@@ -86,10 +86,11 @@ def render():
         density_2 = material_density_custom[material_2]
         density_3 = material_density_custom[material_3]
 
-        volume_1 = (length_mm * width * thickness_1_mm) / 1000
-        volume_2 = (length_mm * width * thickness_2_mm) / 1000
-        volume_3 = (length_mm * width * thickness_3_mm) / 1000
-        adhesive_volume = (length_mm * width * adhesive_thickness_mm) / 1000
+        # 修正: 從 mm³ 轉換到 cm³ 需要除以 1e6 (1 cm³ = 1000 mm³)
+        volume_1 = (length_mm * width * thickness_1_mm) / 1e6
+        volume_2 = (length_mm * width * thickness_2_mm) / 1e6
+        volume_3 = (length_mm * width * thickness_3_mm) / 1e6
+        adhesive_volume = (length_mm * width * adhesive_thickness_mm) / 1e6
 
         weight_1 = volume_1 * density_1
         weight_2 = volume_2 * density_2
